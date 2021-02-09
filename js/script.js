@@ -13,7 +13,7 @@ const jobOptions = document.querySelectorAll("#title option")
 selectJob.addEventListener("change", event => {
         console.log(event.target.value);
         console.log(jobOptions[6]);
-        if (event.target.value === options[6].value) {
+        if (event.target.value === jobOptions[6].value) {
             selectorOptionOther.setAttribute("type", "text");
         } else {
             selectorOptionOther.setAttribute("type", "hidden");
@@ -48,7 +48,7 @@ selectDesign.addEventListener("change", event => {
         } 
     } 
 
-    if (event.target.value === designOptions[1].value) {
+    if (event.target.value === designOptions[2].value) {
         let shirtType = event.target
         selectColor.style.visibility = "visible";
         for (let i = 1; i < shirtOptions.length; i += 1) { 
