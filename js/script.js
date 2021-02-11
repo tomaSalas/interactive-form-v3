@@ -227,6 +227,11 @@ zipNumber.addEventListener("input", createListener(isValidzipNumber));
 css.addEventListener("input", createListener(isValidCss));
 
 labelName = inputName.parentElement;
+labelEmail = email.parentElement;
+labelCardNumber = cardNumber.parentElement;
+labelZipCode = zipNumber.parentElement;
+labelCss = css.parentElement;
+
 
 
 p = document.querySelector("#form-hint");
@@ -236,61 +241,65 @@ p.appendChild(span);
 
 form.addEventListener("submit", event => {
     span.innerHTML = "";
-    labelName.classList.remove(".not-valid", ".valid");
+    labelName.classList.remove("not-valid", "valid");
+    labelEmail.classList.remove("not-valid", "valid");
+    fieldsetActivities.classList.remove("not-valid", "valid");
+    labelCardNumber.classList.remove("not-valid", "valid");
+    labelZipCode.classList.remove("not-valid", "valid");
+    labelCss.classList.remove("not-valid", "valid");
+
     if (!isNameValid()) {
         event.preventDefault();
-        labelName.classList.add(".not-valid");
-        console.log(labelName);
-        // inputName.style.borderColor = "Red";
+        labelName.classList.add("not-valid");
+        showOrHideTip(true, inputName.nextElementSibling);
         span.innerHTML += `<br> --- Name`;
     } else {
-        labelName.classList.add(".valid");
-        console.log(labelName);
-        // inputName.style.borderColor = "rgba(36, 28, 21, 0.2)";
+        labelName.classList.add("valid");
     }
 
     if (!isValidEmailAdress()) {
         event.preventDefault();
-        // email.style.borderColor = "Red";
+        labelEmail.classList.add("not-valid");
+        showOrHideTip(true, email.nextElementSibling);
         span.innerHTML += `<br> --- Email Address`;
     } else {
-        // email.style.borderColor = "rgba(36, 28, 21, 0.2)";
+        labelEmail.classList.add("valid");
     }
 
     if (cost === 0) {
         event.preventDefault();
-        fieldsetActivities.classList.add(".not-valid");
-        // legendActivity.style.color = "red";
-        // activitySelected.style.display = "inherit";
+        activitySelected.style.display = "inherit";
+        fieldsetActivities.classList.add("not-valid");
         span.innerHTML += `<br> --- Activity`;
     } else {
-        fieldsetActivities.classList.remove(".not-valid");
-        // activitySelected.style.display = "none";
-        // legendActivity.style.color = "black";
+        fieldsetActivities.classList.add("valid");
     }
     if (selectPaymentOptions[1].selected === true) {
         if (!isValidcardNumber()) {
             event.preventDefault();
-            // cardNumber.style.borderColor = "red";
+            showOrHideTip(true, cardNumber.nextElementSibling);
+            labelCardNumber.classList.add("not-valid")
             span.innerHTML += `<br> --- Card Number`;
         } else {
-            // cardNumber.style.borderColor = "rgba(36, 28, 21, 0.2)";
+            labelCardNumber.classList.add("valid");
         }
     
         if (!isValidzipNumber()) {
             event.preventDefault();
-            // zipNumber.style.borderColor = "red";
+            showOrHideTip(true, zipNumber.nextElementSibling);
+            labelZipCode.classList.add("not-valid");
             span.innerHTML += `<br> --- Zip Code`;
         } else {
-            // zipNumber.style.borderColor = "rgba(36, 28, 21, 0.2)";
+            labelZipCode.classList.add("valid");
         }
 
         if (!isValidCss()) {
             event.preventDefault();
-            // css.style.borderColor = "red";
+            showOrHideTip(true, css.nextElementSibling);
+            labelCss.classList.add("not-valid");
             span.innerHTML += `<br> --- CSS`;
         } else {
-            // css.style.borderColor = "rgba(36, 28, 21, 0.2)";
+            labelCss.classList.add("valid");
         }
     }
     
