@@ -221,6 +221,10 @@ function createListener (validator) {
 
 
 inputName.addEventListener("input", createListener(isNameValid));
+cardNumber.addEventListener("input", createListener(isValidcardNumber));
+cardNumber.addEventListener("blur", event => {
+event.target.value = formatCardNumber(event.target.value);
+});
 email.addEventListener("input", createListener(isValidEmailAdress));
 zipNumber.addEventListener("input", createListener(isValidzipNumber));
 css.addEventListener("input", createListener(isValidCss));
