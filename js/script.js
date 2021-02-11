@@ -129,7 +129,6 @@ selectPayment.addEventListener("change", event => {
 const form = document.querySelector("form");
 const email = document.querySelector("#email");
 const emailHint = email.querySelector("#email-hint")
-console.log(emailHint);
 const expMonth = document.querySelector("#exp-month");
 const expMonthOptions = expMonth.querySelectorAll("option");
 
@@ -140,55 +139,56 @@ const cardNumber = document.querySelector("#cc-num");
 const zipNumber = document.querySelector("#zip");
 const css = document.querySelector("#cvv");
 
-function isValidEmailAdress (email) {
+function isNameValid () {
+    return  /^[a-zA-Z]+ ?[a-zA-Z]*? ?[a-zA-Z]*?$/.test(inputName.value);
+}
+
+function isValidEmailAdress () {
     let emailRegexp = /^[^@]+@[^@.]+\.[a-z]+$/i;
-    console.log(emailRegexp.test(email));
-    return emailRegexp.test(email);
+    return emailRegexp.test(email.value);
 
 }
 
-function isValidcardNumber (cardNumber) {
+// function isValidcardNumber (cardNumber) {
 
-   let cardNumberRegexp = /^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/;
+//    let cardNumberRegexp = /^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/;
 
-   return cardNumberRegexp.test(cardNumber);
-}
+//    return cardNumberRegexp.test(cardNumber);
+// }
 
-function isValidzipNumber (zipCode) {
-    let zipCodeRegexp = /(^\d{5}$)|(^\d{5}-\d{4}$)/; 
-    console.log(zipCodeRegexp.test(zipCode));
-    return zipCodeRegexp.test(zipCode); 
-}
-function isValidCss (css) {
-    let cvvRegexp = /^[0-9]{3,4}$/;
-    console.log(cvvRegexp.test(css));
-    return cvvRegexp.test(css); 
-}
-
-function isNameValid (inputName) {
-    return  !inputName || /^\s*$/.test(inputName);
-
-}
+// function isValidzipNumber (zipCode) {
+//     let zipCodeRegexp = /(^\d{5}$)|(^\d{5}-\d{4}$)/; 
+//     console.log(zipCodeRegexp.test(zipCode));
+//     return zipCodeRegexp.test(zipCode); 
+// }
+// function isValidCss (css) {
+//     let cvvRegexp = /^[0-9]{3,4}$/;
+//     console.log(cvvRegexp.test(css));
+//     return cvvRegexp.test(css); 
+// }
 
 
 
-// format func
 
-function formatCardNumber (value) {
-    var v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-    var matches = v.match(/\d{4,16}/g);
-    var match = matches && matches[0] || '';
-    var parts = [];
-    for (i=0, len=match.length; i<len; i+=4) {
-      parts.push(match.substring(i, i+4));
-    }
-    if (parts.length) {
-      return parts.join(' ');
-    } else {
-      return value
-    }
 
-}
+
+// // format func
+
+// function formatCardNumber (value) {
+//     var v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+//     var matches = v.match(/\d{4,16}/g);
+//     var match = matches && matches[0] || '';
+//     var parts = [];
+//     for (i=0, len=match.length; i<len; i+=4) {
+//       parts.push(match.substring(i, i+4));
+//     }
+//     if (parts.length) {
+//       return parts.join(' ');
+//     } else {
+//       return value
+//     }
+
+// }
 
 
 
@@ -198,6 +198,7 @@ function showOrHideTip (show, element) {
     if (show) {
         element.style.display = "inherit";
     } else {
+        console.log("asdfasdf");
         element.style.display = "none";
     }
 }
@@ -207,8 +208,9 @@ function showOrHideTip (show, element) {
 function createListener (validator) {
     return e => {
         const text = e.target.value;
+        console.log(text);
         const valid = validator(text);
-        const showTip = text !== "" && !valid;
+        const showTip = text !== null && !valid;
         const toolTip = e.target.nextElementSibling;
         showOrHideTip(showTip, toolTip);
     };
@@ -218,33 +220,44 @@ function createListener (validator) {
 
 
 inputName.addEventListener("input", createListener(isNameValid));
-cardNumber.addEventListener("input", createListener(isValidcardNumber));
-cardNumber.addEventListener("blur", event => {
-event.target.value = formatCardNumber(event.target.value);
-});
 email.addEventListener("input", createListener(isValidEmailAdress));
-zipNumber.addEventListener("input", createListener(isValidzipNumber));
-css.addEventListener("input", createListener(isValidCss));
+// cardNumber.addEventListener("input", createListener(isValidcardNumber));
+// cardNumber.addEventListener("blur", event => {
+// event.target.value = formatCardNumber(event.target.value);
+// });
+
+// zipNumber.addEventListener("input", createListener(isValidzipNumber));
+// css.addEventListener("input", createListener(isValidCss));
 
 
 
 p = document.querySelector("#form-hint");
+span = document.createElement("span");
+span.style.color = "Red";
+p.appendChild(span);
 
 form.addEventListener("submit", event => {
-    event.preventDefault();
-
-    
-    console.log(!createListener(isValidEmailAdress));
-    p.innerHTML = "- required field";
-    if (createListener(isValidEmailAdress)) {
+    span.innerHTML = "";
+    if (!isNameValid()) {
         event.preventDefault();
-        console.log("email is wrong")
-        p.innerHTML += `<br> Email Address`
+        console.log("Name is wrong");
+        span.innerHTML += `<br> --- Name`;
     }
 
-
-    console.log("button is working");
+    if (!isValidEmailAdress()) {
+        event.preventDefault();
+        console.log("Name is wrong");
+        span.innerHTML += `<br> --- Email Address`;
+    }
     
-
+    
+    // console.log(!createListener(isValidEmailAdress));
+    // p.innerHTML = "- required field";
+    // if (createListener(isValidEmailAdress)) {
+    //     event.preventDefault();
+    //     console.log("email is wrong")
+    //     p.innerHTML += `<br> Email Address`
+    // }
+    
 
 });
