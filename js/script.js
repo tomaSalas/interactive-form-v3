@@ -153,10 +153,7 @@ function isValidcardNumber (cardNumber) {
 
    return cardNumberRegexp.test(cardNumber);
 }
-function isMothSelected (option) {
-    console.log("hello");
 
-}
 function isValidzipNumber (zipCode) {
     let zipCodeRegexp = /(^\d{5}$)|(^\d{5}-\d{4}$)/; 
     console.log(zipCodeRegexp.test(zipCode));
