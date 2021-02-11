@@ -12,8 +12,6 @@ const selectJob = document.querySelector("#title");
 const jobOptions = document.querySelectorAll("#title option")
 
 selectJob.addEventListener("change", event => {
-        console.log(event.target.value);
-        console.log(jobOptions[6]);
         if (event.target.value === jobOptions[6].value) {
             selectorOptionOther.setAttribute("type", "text");
         } else {
@@ -93,6 +91,8 @@ fieldsetActivities.addEventListener("change", event => {
     }
 });
 
+
+
 //step7
 
 const selectPayment = document.querySelector("#payment");
@@ -139,6 +139,8 @@ const cardNumber = document.querySelector("#cc-num");
 const zipNumber = document.querySelector("#zip");
 const css = document.querySelector("#cvv");
 
+const legendActivity = document.querySelector("#activities legend");
+
 function isNameValid () {
     return  /^[a-zA-Z]+ ?[a-zA-Z]*? ?[a-zA-Z]*?$/.test(inputName.value);
 }
@@ -149,23 +151,20 @@ function isValidEmailAdress () {
 
 }
 
-// function isValidcardNumber (cardNumber) {
+function isValidcardNumber () {
 
-//    let cardNumberRegexp = /^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/;
+   let cardNumberRegexp = /^\d{13,16}.{1,4}$/g;
+   return cardNumberRegexp.test(cardNumber.value);
+}
 
-//    return cardNumberRegexp.test(cardNumber);
-// }
-
-// function isValidzipNumber (zipCode) {
-//     let zipCodeRegexp = /(^\d{5}$)|(^\d{5}-\d{4}$)/; 
-//     console.log(zipCodeRegexp.test(zipCode));
-//     return zipCodeRegexp.test(zipCode); 
-// }
-// function isValidCss (css) {
-//     let cvvRegexp = /^[0-9]{3,4}$/;
-//     console.log(cvvRegexp.test(css));
-//     return cvvRegexp.test(css); 
-// }
+function isValidzipNumber () {
+    let zipCodeRegexp = /(^\d{5}$)|(^\d{5}-\d{4}$)/; 
+    return zipCodeRegexp.test(zipNumber.value); 
+}
+function isValidCss () {
+    let cvvRegexp = /^[0-9]{3,4}$/;
+    return cvvRegexp.test(css.value); 
+}
 
 
 
@@ -174,21 +173,21 @@ function isValidEmailAdress () {
 
 // // format func
 
-// function formatCardNumber (value) {
-//     var v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-//     var matches = v.match(/\d{4,16}/g);
-//     var match = matches && matches[0] || '';
-//     var parts = [];
-//     for (i=0, len=match.length; i<len; i+=4) {
-//       parts.push(match.substring(i, i+4));
-//     }
-//     if (parts.length) {
-//       return parts.join(' ');
-//     } else {
-//       return value
-//     }
+function formatCardNumber (value) {
+    var v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+    var matches = v.match(/\d{4,16}/g);
+    var match = matches && matches[0] || '';
+    var parts = [];
+    for (i=0, len=match.length; i<len; i+=4) {
+      parts.push(match.substring(i, i+4));
+    }
+    if (parts.length) {
+      return parts.join(' ');
+    } else {
+      return value
+    }
 
-// }
+}
 
 
 
@@ -198,7 +197,6 @@ function showOrHideTip (show, element) {
     if (show) {
         element.style.display = "inherit";
     } else {
-        console.log("asdfasdf");
         element.style.display = "none";
     }
 }
@@ -208,7 +206,6 @@ function showOrHideTip (show, element) {
 function createListener (validator) {
     return e => {
         const text = e.target.value;
-        console.log(text);
         const valid = validator(text);
         const showTip = text !== null && !valid;
         const toolTip = e.target.nextElementSibling;
@@ -221,14 +218,15 @@ function createListener (validator) {
 
 inputName.addEventListener("input", createListener(isNameValid));
 email.addEventListener("input", createListener(isValidEmailAdress));
-// cardNumber.addEventListener("input", createListener(isValidcardNumber));
-// cardNumber.addEventListener("blur", event => {
-// event.target.value = formatCardNumber(event.target.value);
-// });
+cardNumber.addEventListener("input", createListener(isValidcardNumber));
+cardNumber.addEventListener("blur", event => {
+event.target.value = formatCardNumber(event.target.value);
+});
 
-// zipNumber.addEventListener("input", createListener(isValidzipNumber));
-// css.addEventListener("input", createListener(isValidCss));
+zipNumber.addEventListener("input", createListener(isValidzipNumber));
+css.addEventListener("input", createListener(isValidCss));
 
+labelName = inputName.parentElement;
 
 
 p = document.querySelector("#form-hint");
@@ -238,26 +236,85 @@ p.appendChild(span);
 
 form.addEventListener("submit", event => {
     span.innerHTML = "";
+    labelName.classList.remove(".not-valid", ".valid");
     if (!isNameValid()) {
         event.preventDefault();
-        console.log("Name is wrong");
+        labelName.classList.add(".not-valid");
+        console.log(labelName);
+        // inputName.style.borderColor = "Red";
         span.innerHTML += `<br> --- Name`;
+    } else {
+        labelName.classList.add(".valid");
+        console.log(labelName);
+        // inputName.style.borderColor = "rgba(36, 28, 21, 0.2)";
     }
 
     if (!isValidEmailAdress()) {
         event.preventDefault();
-        console.log("Name is wrong");
+        // email.style.borderColor = "Red";
         span.innerHTML += `<br> --- Email Address`;
+    } else {
+        // email.style.borderColor = "rgba(36, 28, 21, 0.2)";
     }
+
+    if (cost === 0) {
+        event.preventDefault();
+        fieldsetActivities.classList.add(".not-valid");
+        // legendActivity.style.color = "red";
+        // activitySelected.style.display = "inherit";
+        span.innerHTML += `<br> --- Activity`;
+    } else {
+        fieldsetActivities.classList.remove(".not-valid");
+        // activitySelected.style.display = "none";
+        // legendActivity.style.color = "black";
+    }
+    if (selectPaymentOptions[1].selected === true) {
+        if (!isValidcardNumber()) {
+            event.preventDefault();
+            // cardNumber.style.borderColor = "red";
+            span.innerHTML += `<br> --- Card Number`;
+        } else {
+            // cardNumber.style.borderColor = "rgba(36, 28, 21, 0.2)";
+        }
     
-    
-    // console.log(!createListener(isValidEmailAdress));
-    // p.innerHTML = "- required field";
-    // if (createListener(isValidEmailAdress)) {
-    //     event.preventDefault();
-    //     console.log("email is wrong")
-    //     p.innerHTML += `<br> Email Address`
-    // }
+        if (!isValidzipNumber()) {
+            event.preventDefault();
+            // zipNumber.style.borderColor = "red";
+            span.innerHTML += `<br> --- Zip Code`;
+        } else {
+            // zipNumber.style.borderColor = "rgba(36, 28, 21, 0.2)";
+        }
+
+        if (!isValidCss()) {
+            event.preventDefault();
+            // css.style.borderColor = "red";
+            span.innerHTML += `<br> --- CSS`;
+        } else {
+            // css.style.borderColor = "rgba(36, 28, 21, 0.2)";
+        }
+    }
     
 
 });
+
+
+/// step 9
+
+const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+for (let i = 0; i < checkboxes.length; i += 1) {
+    checkboxes[i].addEventListener("focus", (event) => {
+        let checkbox = event.target;
+        let parent = checkbox.parentElement;
+        parent.classList.add("focus");
+    
+      });
+      
+      checkboxes[i].addEventListener("blur", (event) => {
+        let checkbox = event.target;
+        let parent = checkbox.parentElement;
+        parent.classList.remove("focus");
+    });
+
+}
+
+
