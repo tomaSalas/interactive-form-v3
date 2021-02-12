@@ -297,7 +297,7 @@ form.addEventListener("submit", event => {
     }
 
     if (cost === 0) {
-        showError(labelName, "---At lest one activity must be selected", undefined);
+        showError(fieldsetActivities, "---At lest one activity must be selected", undefined);
     } else {
         addingPrompValidation(fieldsetActivities);
     }
