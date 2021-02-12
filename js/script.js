@@ -1,99 +1,27 @@
 
-// step 1
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////// DOM elements //////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const inputName = document.querySelector("#name");
-const nameHint = document.querySelector("#name-hint");
-inputName.focus();
+const inputEmail = document.querySelector("#email");
+const inputCardNumber = document.querySelector("#cc-num");
+const inputZipNumber = document.querySelector("#zip");
+const inputCss = document.querySelector("#cvv");
 
-//step 2
 const selectorOptionOther = document.querySelector("#other-job-role");
-selectorOptionOther.setAttribute("type", "hidden");
-
 const selectJob = document.querySelector("#title");
 const jobOptions = document.querySelectorAll("#title option")
-
-selectJob.addEventListener("change", event => {
-        if (event.target.value === jobOptions[6].value) {
-            selectorOptionOther.setAttribute("type", "text");
-        } else {
-            selectorOptionOther.setAttribute("type", "hidden");
-        }
-});
-
-//step 5 
 
 const selectDesign = document.querySelector("#design");
 const designOptions = document.querySelectorAll("#design option")
 const selectColor = document.querySelector("#shirt-colors")
 const shirtOptions = document.querySelectorAll("#color option")
-selectColor.style.visibility = "hidden";
-
-
-
-
-
-
-selectDesign.addEventListener("change", event => {
-    if (designOptions[1].selected === true) {
-        let shirtType = event.target
-        selectColor.style.visibility = "visible";
-        for (let i = 1; i < shirtOptions.length; i += 1) { 
-            let shirtTypeOptions = shirtOptions[i].getAttribute("data-theme");
-            if ( shirtTypeOptions === shirtType.value  ) {
-                shirtOptions[i].style.display = "";
-            } else {
-                shirtOptions[i].style.display = "none";
-            }
-    
-        } 
-    } 
-
-    if (designOptions[2].selected === true) {
-        let shirtType = event.target
-        selectColor.style.visibility = "visible";
-        for (let i = 1; i < shirtOptions.length; i += 1) { 
-            let shirtTypeOptions = shirtOptions[i].getAttribute("data-theme");
-            if ( shirtTypeOptions === shirtType.value  ) {
-                shirtOptions[i].style.display = "";
-            } else {
-                shirtOptions[i].style.display = "none";
-            }
-    
-        } 
-    } 
-});
-
-
-// step 6
 
 const fieldsetActivities = document.querySelector("#activities");
 const updateCost = document.querySelector("#activities-cost");
 const activitySelected = document.querySelector("#activities-hint");
-
-
-let cost = 0;
-
-fieldsetActivities.addEventListener("change", event => {
-    let chechbox = event.target;
-    if (chechbox.checked === true) {
-        cost += parseInt(chechbox.getAttribute("data-cost"));
-        updateCost.textContent = `Total: \$${cost}`;
-        
-    }
-    if (chechbox.checked === false) {
-        cost -= parseInt(chechbox.getAttribute("data-cost"));
-        updateCost.textContent = `Total: \$${cost}`;
-    }
-
-    if (cost === 0) {
-        activitySelected.style.display = "inherit"
-    } else {
-        activitySelected.style.display = "none";
-    }
-});
-
-
-
-//step7
+const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
 const selectPayment = document.querySelector("#payment");
 const selectPaymentOptions = document.querySelectorAll("#payment option");
@@ -101,14 +29,109 @@ const creditcardDiv = document.querySelector("#credit-card");
 const paypalDiv = document.querySelector("#paypal");
 const bitcoinDiv = document.querySelector("#bitcoin");
 
-selectPaymentOptions[1].selected = true;
+const form = document.querySelector("form");
+const expMonth = document.querySelector("#exp-month");
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////// global var ////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+let cost = 0;
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////// labels ////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+let labelName = inputName.parentElement;
+let labelEmail = inputEmail.parentElement;
+let labelCardNumber = inputCardNumber.parentElement;
+let labelZipCode = inputZipNumber.parentElement;
+let labelCss = inputCss.parentElement;
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////// create element ////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+p = document.querySelector("#form-hint");
+span = document.createElement("span");
+span.style.color = "Red";
+p.appendChild(span);
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////// intial status /////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+selectColor.style.visibility = "hidden";
+selectorOptionOther.setAttribute("type", "hidden");
+inputName.focus();
+selectPaymentOptions[1].selected = true;
 paypalDiv.style.display = "none";
 bitcoinDiv.style.display = "none";
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////// functions /////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
-selectPayment.addEventListener("change", event => {
+function updatePrice() {
+    let checkbox = event.target;
+    if (checkbox.checked === true) {
+        cost += parseInt(checkbox.getAttribute("data-cost"));
+        updateCost.textContent = `Total: \$${cost}`;
+        
+    } else if (checkbox.checked === false) {
+        cost -= parseInt(checkbox.getAttribute("data-cost"));
+        updateCost.textContent = `Total: \$${cost}`;
+     
+    }
+    validatePrice();
+}
 
+function validatePrice()  {
+    fieldsetActivities.classList.remove("not-valid");
+    fieldsetActivities.classList.remove("valid");
+    if (cost === 0) {
+        activitySelected.style.display = "inherit";
+        fieldsetActivities.classList.add("not-valid");
+
+    } else {
+        activitySelected.style.display = "none";
+        fieldsetActivities.classList.add("valid");
+    }
+}
+
+function showOther() {
+    let selection = event.target.value;
+    let optionOther = jobOptions[jobOptions.length - 1].value;
+    if (selection === optionOther) {
+        selectorOptionOther.setAttribute("type", "text");
+    } else {
+        selectorOptionOther.setAttribute("type", "hidden");
+    }
+
+}
+
+function showColorOptions(shirtType) {
+    for (let i = 1; i < shirtOptions.length; i += 1) { 
+        let shirtTypeOptions = shirtOptions[i].getAttribute("data-theme");
+        if ( shirtTypeOptions === shirtType.value  ) {
+            shirtOptions[i].style.display = "";
+        } else {
+            shirtOptions[i].style.display = "none";
+        }
+    } 
+}
+
+function showColor() {
+    if (designOptions[1].selected === true) {
+        let shirtType = event.target
+        selectColor.style.visibility = "visible";
+        showColorOptions(shirtType);
+        
+    } else if (designOptions[2].selected === true) {
+        let shirtType = event.target
+        selectColor.style.visibility = "visible";
+        showColorOptions(shirtType);
+    }
+}
+
+function paymentOptions() {
     if (selectPaymentOptions[1].selected === true) {
         creditcardDiv.style.display = "";
         paypalDiv.style.display = "none";
@@ -122,24 +145,61 @@ selectPayment.addEventListener("change", event => {
         paypalDiv.style.display = "none";
         bitcoinDiv.style.display = "";
     }
-});
+}
 
-//step 8 
+function resetError() {
+    span.innerHTML = "";
+    labelName.classList.remove("not-valid", "valid");
+    labelEmail.classList.remove("not-valid", "valid");
+    fieldsetActivities.classList.remove("not-valid", "valid");
+    labelCardNumber.classList.remove("not-valid", "valid");
+    labelZipCode.classList.remove("not-valid", "valid");
+    labelCss.classList.remove("not-valid", "valid");
+}
 
-const form = document.querySelector("form");
-const email = document.querySelector("#email");
-const emailHint = email.querySelector("#email-hint")
-const expMonth = document.querySelector("#exp-month");
-const expMonthOptions = expMonth.querySelectorAll("option");
+function showError(label, error, input) {
+    event.preventDefault();
+    label.classList.add("not-valid");
+    if (input === undefined) {
+        span.innerHTML += `<br> ${error}`;
+        return
+    }
+    span.innerHTML += `<br> ${error}`;
+    showOrHideTip(true, input.nextElementSibling, label);
+    
 
-const expYear = document.querySelector("#exp-year");
-const expYearOptions = expYear.querySelectorAll("option");
+}
 
-const cardNumber = document.querySelector("#cc-num");
-const zipNumber = document.querySelector("#zip");
-const css = document.querySelector("#cvv");
+function addingPrompError(element) {
+    element.classList.add("not-valid");
+}
+function addingPrompValidation(element) {
+    element.classList.add("valid");
+}
 
-const legendActivity = document.querySelector("#activities legend");
+///////////////////////////////////////// helper functions ///////////////////////////////////////// 
+
+function createListener (validator, element) {
+    return e => {
+        const text = e.target.value;
+        const valid = validator(text);
+        const showTip = text !== null && !valid;
+        const toolTip = e.target.nextElementSibling;
+        showOrHideTip(showTip, toolTip, element);
+    };
+}
+
+function showOrHideTip (show, element, value) {
+    value.classList.remove("not-valid", "valid");
+    if (show) {
+        element.style.display = "inherit";
+        addingPrompError(value);
+
+    } else {
+        element.style.display = "none";
+        addingPrompValidation(value);
+    }
+}
 
 function isNameValid () {
     return  /^[a-zA-Z]+ ?[a-zA-Z]*? ?[a-zA-Z]*?$/.test(inputName.value);
@@ -147,31 +207,25 @@ function isNameValid () {
 
 function isValidEmailAdress () {
     let emailRegexp = /^[^@]+@[^@.]+\.[a-z]+$/i;
-    return emailRegexp.test(email.value);
+    return emailRegexp.test(inputEmail.value);
 
 }
 
 function isValidcardNumber () {
-
    let cardNumberRegexp = /^\d{13,16}.{1,4}$/g;
-   return cardNumberRegexp.test(cardNumber.value);
+   return cardNumberRegexp.test(inputCardNumber.value);
 }
 
 function isValidzipNumber () {
     let zipCodeRegexp = /(^\d{5}$)|(^\d{5}-\d{4}$)/; 
-    return zipCodeRegexp.test(zipNumber.value); 
+    return zipCodeRegexp.test(inputZipNumber.value); 
 }
 function isValidCss () {
     let cvvRegexp = /^[0-9]{3,4}$/;
-    return cvvRegexp.test(css.value); 
+    return cvvRegexp.test(inputCss.value); 
 }
 
-
-
-
-
-
-// // format func
+///////////////////////////////////////// format function ///////////////////////////////////////// 
 
 function formatCardNumber (value) {
     var v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
@@ -190,116 +244,80 @@ function formatCardNumber (value) {
 }
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////// event handlers ////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+selectJob.addEventListener("change", event => {
+    showOther();
+});
+
+selectDesign.addEventListener("change", event => {
+    showColor();
+});
+
+fieldsetActivities.addEventListener("change", event => {
+    updatePrice();
+});
+
+selectPayment.addEventListener("change", event => {
+    paymentOptions();
+    
+});
+
+///////////////////////////////////////// validation events ///////////////////////////////////////// 
 
 
-function showOrHideTip (show, element) {
+inputName.addEventListener("input", createListener(isNameValid, labelName));
 
-    if (show) {
-        element.style.display = "inherit";
-    } else {
-        element.style.display = "none";
-    }
-}
+inputEmail.addEventListener("input", createListener(isValidEmailAdress, labelEmail));
 
+inputCardNumber.addEventListener("input", createListener(isValidcardNumber, labelCardNumber));
 
-
-function createListener (validator) {
-    return e => {
-        const text = e.target.value;
-        const valid = validator(text);
-        const showTip = text !== null && !valid;
-        const toolTip = e.target.nextElementSibling;
-        showOrHideTip(showTip, toolTip);
-    };
-}
-
-
-
-
-inputName.addEventListener("input", createListener(isNameValid));
-email.addEventListener("input", createListener(isValidEmailAdress));
-cardNumber.addEventListener("input", createListener(isValidcardNumber));
-cardNumber.addEventListener("blur", event => {
+inputCardNumber.addEventListener("blur", event => {
 event.target.value = formatCardNumber(event.target.value);
 });
 
-zipNumber.addEventListener("input", createListener(isValidzipNumber));
-css.addEventListener("input", createListener(isValidCss));
+inputZipNumber.addEventListener("input", createListener(isValidzipNumber,labelZipCode));
 
-labelName = inputName.parentElement;
-labelEmail = email.parentElement;
-labelCardNumber = cardNumber.parentElement;
-labelZipCode = zipNumber.parentElement;
-labelCss = css.parentElement;
-
-
-
-p = document.querySelector("#form-hint");
-span = document.createElement("span");
-span.style.color = "Red";
-p.appendChild(span);
+inputCss.addEventListener("input", createListener(isValidCss, labelCss));
 
 form.addEventListener("submit", event => {
-    span.innerHTML = "";
-    labelName.classList.remove("not-valid", "valid");
-    labelEmail.classList.remove("not-valid", "valid");
-    fieldsetActivities.classList.remove("not-valid", "valid");
-    labelCardNumber.classList.remove("not-valid", "valid");
-    labelZipCode.classList.remove("not-valid", "valid");
-    labelCss.classList.remove("not-valid", "valid");
-
+    resetError();
     if (!isNameValid()) {
-        event.preventDefault();
-        labelName.classList.add("not-valid");
-        showOrHideTip(true, inputName.nextElementSibling);
-        span.innerHTML += `<br> --- Name`;
+        showError(labelName, "---Name cannot be blank", inputName);
     } else {
-        labelName.classList.add("valid");
+        addingPrompValidation(labelName);
     }
 
     if (!isValidEmailAdress()) {
-        event.preventDefault();
-        labelEmail.classList.add("not-valid");
-        showOrHideTip(true, email.nextElementSibling);
-        span.innerHTML += `<br> --- Email Address`;
+        showError(labelEmail, "---Email cannot be blank (example: \"example@gmail.com\")", inputEmail);
     } else {
-        labelEmail.classList.add("valid");
+        addingPrompValidation(labelEmail);
     }
 
     if (cost === 0) {
-        event.preventDefault();
-        activitySelected.style.display = "inherit";
-        fieldsetActivities.classList.add("not-valid");
-        span.innerHTML += `<br> --- Activity`;
+        showError(labelName, "---At lest one activity must be selected", undefined);
     } else {
-        fieldsetActivities.classList.add("valid");
+        addingPrompValidation(fieldsetActivities);
     }
     if (selectPaymentOptions[1].selected === true) {
         if (!isValidcardNumber()) {
-            event.preventDefault();
-            showOrHideTip(true, cardNumber.nextElementSibling);
-            labelCardNumber.classList.add("not-valid")
-            span.innerHTML += `<br> --- Card Number`;
+            showError(labelCardNumber, "---Card Number cannot be blank (example: \"1234567812345678\")", inputCardNumber);
         } else {
-            labelCardNumber.classList.add("valid");
+            addingPrompValidation(labelCardNumber, "---Card Number cannot be blank (example: \"1234567812345678\")");
         }
     
         if (!isValidzipNumber()) {
-            event.preventDefault();
-            showOrHideTip(true, zipNumber.nextElementSibling);
-            labelZipCode.classList.add("not-valid");
-            span.innerHTML += `<br> --- Zip Code`;
+            showError(labelZipCode, "---Zip Code cannot be blank (example: \"42071\")", inputZipNumber);
         } else {
-            labelZipCode.classList.add("valid");
+            addingPrompValidation(labelZipCode);
         }
 
         if (!isValidCss()) {
-            event.preventDefault();
-            showOrHideTip(true, css.nextElementSibling);
-            labelCss.classList.add("not-valid");
-            span.innerHTML += `<br> --- CSS`;
+            showError(labelCss, "---CSS cannot be blank (example: \"111\")",inputCss);
         } else {
-            labelCss.classList.add("valid");
+            addingPrompValidation(labelCss);
         }
     }
     
@@ -307,9 +325,9 @@ form.addEventListener("submit", event => {
 });
 
 
-/// step 9
+///////////////////////////////////////// Accessibility event ///////////////////////////////////////// 
 
-const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
 for (let i = 0; i < checkboxes.length; i += 1) {
     checkboxes[i].addEventListener("focus", (event) => {
         let checkbox = event.target;
@@ -327,25 +345,29 @@ for (let i = 0; i < checkboxes.length; i += 1) {
 }
 
 
-
+///////////////////////////////////////// conflicting dates in checkbox ///////////////////////////////////////// 
 fieldsetActivities.addEventListener("change", event => {
-    let chechbox = event.target;
-    if (chechbox.checked === true) {
-        let day = chechbox.getAttribute("data-day-and-time")
+    let checkbox = event.target;
+    if (checkbox.checked) {
+        let checkboxSelectedDay = checkbox.getAttribute("data-day-and-time");
+        if (!checkboxSelectedDay) {
+            return
+        }
         for (let i = 0; i < checkboxes.length; i += 1) {
-            let days = checkboxes[i].getAttribute("data-day-and-time")
-            if (day.match(days)) {
+            let otherDays = checkboxes[i].getAttribute("data-day-and-time");
+            if (checkboxSelectedDay.match(otherDays)) {
                 checkboxes[i].disabled = true;
-                chechbox.disabled = false;
-                // chechbox.parentElement.classList.remove("disable");
-                let parent = checkboxes[i].parentElement;
-                parent.classList.add("disabled");
-                let second = chechbox.parentElement;
-                second.classList.remove("disabled");
+                checkbox.disabled = false;
+                let parentOther = checkboxes[i].parentElement;
+                parentOther.classList.add("disabled");
+                let parentSelected = checkbox.parentElement;
+                parentSelected.classList.remove("disabled");
             } 
+    
         }
         
     } else {
+
         for (let i = 0; i < checkboxes.length; i += 1) {
             let parent = checkboxes[i].parentElement;
             parent.classList.remove("disabled");
