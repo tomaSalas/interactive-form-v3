@@ -229,7 +229,7 @@ function isValidCss () {
 }
 
 ///////////////////////////////////////// format function ///////////////////////////////////////// 
-
+/// src https://stackoverflow.com/questions/36833366/format-credit-card-number
 function formatCardNumber (value) {
     var v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
     var matches = v.match(/\d{4,16}/g);
