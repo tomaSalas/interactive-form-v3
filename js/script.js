@@ -327,3 +327,30 @@ for (let i = 0; i < checkboxes.length; i += 1) {
 }
 
 
+
+fieldsetActivities.addEventListener("change", event => {
+    let chechbox = event.target;
+    if (chechbox.checked === true) {
+        let day = chechbox.getAttribute("data-day-and-time")
+        for (let i = 0; i < checkboxes.length; i += 1) {
+            let days = checkboxes[i].getAttribute("data-day-and-time")
+            if (day.match(days)) {
+                checkboxes[i].disabled = true;
+                chechbox.disabled = false;
+                // chechbox.parentElement.classList.remove("disable");
+                let parent = checkboxes[i].parentElement;
+                parent.classList.add("disabled");
+                let second = chechbox.parentElement;
+                second.classList.remove("disabled");
+            } 
+        }
+        
+    } else {
+        for (let i = 0; i < checkboxes.length; i += 1) {
+            let parent = checkboxes[i].parentElement;
+            parent.classList.remove("disabled");
+            checkboxes[i].disabled = false;
+        }
+
+    }
+});
