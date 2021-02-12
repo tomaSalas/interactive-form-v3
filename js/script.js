@@ -211,9 +211,12 @@ function isValidEmailAdress () {
 
 }
 
-function isValidcardNumber () {
-   let cardNumberRegexp = /^\d{13,16}.{1,4}$/g;
-   return cardNumberRegexp.test(inputCardNumber.value);
+function isValidFormatNumber(cardNumber) {
+    return cardNumber.replace(/\s/g, '');
+}
+function isValidcardNumber (cardNumber) {
+   let cardNumberRegexp = /^\d{13,16}$/g;
+   return cardNumberRegexp.test(isValidFormatNumber(inputCardNumber.value));
 }
 
 function isValidzipNumber () {
@@ -284,43 +287,55 @@ inputCss.addEventListener("input", createListener(isValidCss, labelCss));
 
 form.addEventListener("submit", event => {
     resetError();
+    let check = 0
     if (!isNameValid()) {
         showError(labelName, "---Name cannot be blank", inputName);
     } else {
         addingPrompValidation(labelName);
+        check += 1;
     }
 
     if (!isValidEmailAdress()) {
         showError(labelEmail, "---Email cannot be blank (example: \"example@gmail.com\")", inputEmail);
     } else {
+        check += 1;
         addingPrompValidation(labelEmail);
     }
 
     if (cost === 0) {
         showError(fieldsetActivities, "---At lest one activity must be selected", undefined);
     } else {
+        check += 1;
         addingPrompValidation(fieldsetActivities);
     }
     if (selectPaymentOptions[1].selected === true) {
         if (!isValidcardNumber()) {
             showError(labelCardNumber, "---Card Number cannot be blank (example: \"1234567812345678\")", inputCardNumber);
         } else {
+            check += 1;
             addingPrompValidation(labelCardNumber, "---Card Number cannot be blank (example: \"1234567812345678\")");
         }
     
         if (!isValidzipNumber()) {
             showError(labelZipCode, "---Zip Code cannot be blank (example: \"42071\")", inputZipNumber);
         } else {
+            check += 1;
             addingPrompValidation(labelZipCode);
         }
 
         if (!isValidCss()) {
             showError(labelCss, "---CSS cannot be blank (example: \"111\")",inputCss);
         } else {
+            check += 1;
             addingPrompValidation(labelCss);
+        }
+
+        if (check === 6) {
+            window.alert("The form was succesfully submited!");
         }
     }
     
+
 
 });
 
