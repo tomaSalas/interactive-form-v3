@@ -268,7 +268,9 @@ form.addEventListener("submit", event => {
     resetError();
     let check = 0
     if (!isNameValid()) {
-        if (inputName.value.match(".*\\d.*")) {
+        let str = inputName.value;
+        let rex = /\d/;
+        if (rex.test(str)) {
             showError(labelName, "---Name field can only contain letters", inputName);
             inputName.nextElementSibling.textContent = "Name field can only contain letters";
         }
@@ -279,7 +281,18 @@ form.addEventListener("submit", event => {
     }
 
     if (!isValidEmailAdress()) {
-        showError(labelEmail, "---Email cannot be blank (example: \"example@gmail.com\")", inputEmail);
+        let str = inputEmail.value;
+        let rex = /\w/;
+        console.log(!rex.test(str));
+        if (!rex.test(str)) {
+            showError(labelEmail, "---Email cannot be blank (example: \"example@gmail.com\")", inputEmail);
+            inputEmail.nextElementSibling.textContent = "Email field must not be left blank";
+        }
+        else {
+            showError(labelEmail, "---Email must contain a \"@\"", inputEmail);
+            inputEmail.nextElementSibling.textContent = "Email field must contain a \"@\"";
+        } 
+        
     } else {
         check += 1;
         addingPrompValidation(labelEmail);
