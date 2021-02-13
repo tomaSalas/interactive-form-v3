@@ -102,15 +102,18 @@ function showOther() {
     if (selection === optionOther) {
         selectorOptionOther.setAttribute("type", "text");
     } else {
+        selectorOptionOther.value = "";
         selectorOptionOther.setAttribute("type", "hidden");
     }
 
 }
 
 function showColorOptions(shirtType) {
+    shirtOptions[0].selected = true;
+    shirtOptions[0].textContent = "Please select a color";
     for (let i = 1; i < shirtOptions.length; i += 1) { 
         let shirtTypeOptions = shirtOptions[i].getAttribute("data-theme");
-        if ( shirtTypeOptions === shirtType.value  ) {
+        if (shirtTypeOptions === shirtType.value) {
             shirtOptions[i].style.display = "";
         } else {
             shirtOptions[i].style.display = "none";
@@ -166,7 +169,6 @@ function showError(label, error, input) {
     }
     span.innerHTML += `<br> ${error}`;
     showOrHideTip(true, input.nextElementSibling, label);
-    
 
 }
 
@@ -211,12 +213,10 @@ function isValidEmailAdress () {
 
 }
 
-function isValidFormatNumber(cardNumber) {
-    return cardNumber.replace(/\s/g, '');
-}
-function isValidcardNumber (cardNumber) {
+
+function isValidcardNumber () {
    let cardNumberRegexp = /^\d{13,16}$/g;
-   return cardNumberRegexp.test(isValidFormatNumber(inputCardNumber.value));
+   return cardNumberRegexp.test(inputCardNumber.value);
 }
 
 function isValidzipNumber () {
@@ -226,24 +226,6 @@ function isValidzipNumber () {
 function isValidCss () {
     let cvvRegexp = /^[0-9]{3,4}$/;
     return cvvRegexp.test(inputCss.value); 
-}
-
-///////////////////////////////////////// format function ///////////////////////////////////////// 
-/// src https://stackoverflow.com/questions/36833366/format-credit-card-number
-function formatCardNumber (value) {
-    var v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-    var matches = v.match(/\d{4,16}/g);
-    var match = matches && matches[0] || '';
-    var parts = [];
-    for (i=0, len=match.length; i<len; i+=4) {
-      parts.push(match.substring(i, i+4));
-    }
-    if (parts.length) {
-      return parts.join(' ');
-    } else {
-      return value
-    }
-
 }
 
 
@@ -277,9 +259,6 @@ inputEmail.addEventListener("input", createListener(isValidEmailAdress, labelEma
 
 inputCardNumber.addEventListener("input", createListener(isValidcardNumber, labelCardNumber));
 
-inputCardNumber.addEventListener("blur", event => {
-event.target.value = formatCardNumber(event.target.value);
-});
 
 inputZipNumber.addEventListener("input", createListener(isValidzipNumber,labelZipCode));
 
@@ -289,7 +268,11 @@ form.addEventListener("submit", event => {
     resetError();
     let check = 0
     if (!isNameValid()) {
-        showError(labelName, "---Name cannot be blank", inputName);
+        if (inputName.value.match(".*\\d.*")) {
+            showError(labelName, "---Name field can only contain letters", inputName);
+            inputName.nextElementSibling.textContent = "Name field can only contain letters";
+        }
+        showError(labelName, "---Name cannot be left blank", inputName);
     } else {
         addingPrompValidation(labelName);
         check += 1;
@@ -313,7 +296,7 @@ form.addEventListener("submit", event => {
             showError(labelCardNumber, "---Card Number cannot be blank (example: \"1234567812345678\")", inputCardNumber);
         } else {
             check += 1;
-            addingPrompValidation(labelCardNumber, "---Card Number cannot be blank (example: \"1234567812345678\")");
+            addingPrompValidation(labelCardNumber);
         }
     
         if (!isValidzipNumber()) {
